@@ -1,4 +1,5 @@
-# MySQL Replication & Backup Project
+# MySQL 복제 및 백업 자동화
+> cron + 셸 스크립트로 구성한 mysqldump 백업 파이프라인
 
 ## 0. 팀원 소개
 | 박여명 | 신준수 |
@@ -157,6 +158,34 @@ echo "[OK] Backup completed: $TAR_FILE"
 | **Oracle**  | RMAN                              | 증분/압축 백업, 엔터프라이즈 표준       |
 | **MS SQL**  | Full / Incremental / Differential | GUI 관리 용이, 다양한 복구 모드         |
 | **MongoDB** | `mongodump`, oplog                | JSON/BSON 단위, Replica Set 기반 백업   |
+
+## 8.1 MySQL (기술문서를 읽고 프로젝트에 적용한 포인트)
+
+###1) 선택한 백업 방식
+
+Replica(READ ONLY)에서만 논리 백업: mysqldump --single-transaction → .tar.gz 압축 → 7일 보관
+
+이유: Primary 부하 최소화, InnoDB 온라인 일관성 확보, 이식성/가독성 좋은 덤프 파일
+
+###2) 복제(Replication) 구성
+
+GTID 모드 ON(양쪽) + 자동 포지션: SOURCE_AUTO_POSITION=1
+
+포트: Primary Windows 서버 3307
+
+계정: repl (Primary에 생성, mysql_native_password 사용)
+
+보호: Replica read_only=ON, super_read_only=ON (실수로 쓰기 방지)
+
+###3) 백업 자동화(Replica)
+
+백업 계정: backup@localhost (최소 권한: SELECT/SHOW VIEW/TRIGGER/EVENT/LOCK TABLES)
+
+자격파일: /root/.my.cnf (600 권한)
+
+스크립트 경로: /usr/local/bin/mysqldump_backup.sh
+
+크론: 매일 03:00 실행, 로그 /var/log/mysql_backup.log
 
 ---
 
