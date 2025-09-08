@@ -1,4 +1,4 @@
-# MySQL Replication & Backup Mini Project
+# MySQL Replication & Backup Project
 
 ## 0. 팀원 소개
 | 박여명 | 신준수 |
