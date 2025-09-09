@@ -161,13 +161,13 @@ echo "[OK] Backup completed: $TAR_FILE"
 
 ## 8.1 MySQL (기술문서를 읽고 프로젝트에 적용한 포인트)
 
-###1) 선택한 백업 방식
+1) 선택한 백업 방식
 
 Replica(READ ONLY)에서만 논리 백업: mysqldump --single-transaction → .tar.gz 압축 → 7일 보관
 
 이유: Primary 부하 최소화, InnoDB 온라인 일관성 확보, 이식성/가독성 좋은 덤프 파일
 
-###2) 복제(Replication) 구성
+2) 복제(Replication) 구성
 
 GTID 모드 ON(양쪽) + 자동 포지션: SOURCE_AUTO_POSITION=1
 
@@ -177,7 +177,7 @@ GTID 모드 ON(양쪽) + 자동 포지션: SOURCE_AUTO_POSITION=1
 
 보호: Replica read_only=ON, super_read_only=ON (실수로 쓰기 방지)
 
-###3) 백업 자동화(Replica)
+3) 백업 자동화(Replica)
 
 백업 계정: backup@localhost (최소 권한: SELECT/SHOW VIEW/TRIGGER/EVENT/LOCK TABLES)
 
